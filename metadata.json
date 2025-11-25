@@ -1,0 +1,7 @@
+{
+  "name": "Hafla - Suivi Scolaire",
+  "description": "Application mobile pour les parents permettant le suivi en temps réel du bus scolaire, la réception de notifications et la gestion du profil enfant.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}
