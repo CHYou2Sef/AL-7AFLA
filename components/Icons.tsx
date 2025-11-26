@@ -3,7 +3,8 @@ import React from 'react';
 import { 
   MapPin, Bell, User, Bus, Phone, LogOut, ChevronRight, Navigation, Clock, 
   ShieldCheck, AlertTriangle, Moon, Sun, Globe, Layers, Calendar, ArrowLeft,
-  Edit2, Save, X, Settings, UserPlus, CalendarX, Building, Lock
+  Edit2, Save, X, Settings, UserPlus, CalendarX, Building, Lock, Share2,
+  Search, Github, Facebook, Chrome
 } from 'lucide-react';
 
 export const Icons = {
@@ -31,5 +32,10 @@ export const Icons = {
   UserPlus: UserPlus,
   CalendarOff: CalendarX,
   School: Building,
-  Lock: Lock
+  Lock: Lock,
+  Share: Share2,
+  Search: Search,
+  Github: Github,
+  Facebook: Facebook,
+  Google: Chrome // Using Chrome icon as a proxy for Google in Lucide set
 };

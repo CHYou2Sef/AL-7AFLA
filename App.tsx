@@ -1,14 +1,18 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { AppView, User, Notification, Language, MapMode } from './types';
 import { Icons } from './components/Icons';
 import { MapVisual } from './components/MapVisual';
 import { MOCK_NOTIFICATIONS, TRANSLATIONS, MOCK_HISTORY } from './constants';
 
-// --- SUB-COMPONENTS ---
+/**
+ * --- SUB-COMPONENTS ---
+ * Smaller components used to build the main views.
+ */
 
+// Splash Screen: displayed initially while loading
 const SplashScreen = ({ onFinish }: { onFinish: () => void }) => {
   useEffect(() => {
+    // Simulate loading time (e.g., checking auth session)
     const timer = setTimeout(onFinish, 2500);
     return () => clearTimeout(timer);
   }, [onFinish]);
@@ -29,13 +33,36 @@ const SplashScreen = ({ onFinish }: { onFinish: () => void }) => {
   );
 };
 
+// Social Login Component
+const SocialLogin = ({ onSocialLogin }: { onSocialLogin: () => void }) => (
+  <div className="w-full flex flex-col items-center gap-4 mt-4">
+    <div className="flex items-center w-full gap-2">
+      <div className="h-px bg-gray-200 flex-1"></div>
+      <span className="text-xs text-gray-400 font-medium">Ou continuer avec</span>
+      <div className="h-px bg-gray-200 flex-1"></div>
+    </div>
+    <div className="flex gap-4 justify-center w-full">
+      <button onClick={onSocialLogin} className="w-14 h-14 rounded-2xl border border-gray-200 flex items-center justify-center hover:bg-gray-50 transition-colors">
+        <Icons.Google className="w-6 h-6 text-red-500" />
+      </button>
+      <button onClick={onSocialLogin} className="w-14 h-14 rounded-2xl border border-gray-200 flex items-center justify-center hover:bg-gray-50 transition-colors">
+        <Icons.Facebook className="w-6 h-6 text-blue-600" />
+      </button>
+      <button onClick={onSocialLogin} className="w-14 h-14 rounded-2xl border border-gray-200 flex items-center justify-center hover:bg-gray-50 transition-colors">
+        <Icons.Github className="w-6 h-6 text-gray-800" />
+      </button>
+    </div>
+  </div>
+);
+
+// Login Screen: Handles user authentication (simulated)
 const LoginScreen = ({ onLogin, onSignupClick, t }: { onLogin: () => void, onSignupClick: () => void, t: any }) => {
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
 
   return (
     <div className="h-screen w-full bg-white flex flex-col relative overflow-hidden">
-       {/* Vivid Background */}
+       {/* Vivid Background using CSS shapes and gradients */}
        <div className="absolute top-0 left-0 w-full h-[50%] bg-gradient-to-br from-purple-600 to-indigo-600 rounded-b-[60px] shadow-2xl z-0"></div>
        <div className="absolute top-[-50px] left-[-50px] w-48 h-48 bg-purple-400 rounded-full mix-blend-multiply filter blur-2xl opacity-50 animate-blob"></div>
        <div className="absolute top-[10%] right-[-20px] w-40 h-40 bg-pink-500 rounded-full mix-blend-multiply filter blur-2xl opacity-50 animate-blob animation-delay-2000"></div>
@@ -49,7 +76,7 @@ const LoginScreen = ({ onLogin, onSignupClick, t }: { onLogin: () => void, onSig
             <p className="text-purple-100 text-lg">{t.subtitle}</p>
         </div>
         
-        <div className="bg-white rounded-3xl shadow-xl p-8 flex flex-col gap-6 flex-grow max-h-[450px]">
+        <div className="bg-white rounded-3xl shadow-xl p-8 flex flex-col gap-4 flex-grow max-h-[580px] overflow-y-auto no-scrollbar">
              <div className="space-y-4">
                 <div>
                     <label className="block text-sm font-bold text-gray-700 mb-1 ml-1">{t.phoneLabel}</label>
@@ -86,7 +113,7 @@ const LoginScreen = ({ onLogin, onSignupClick, t }: { onLogin: () => void, onSig
                 </div>
             </div>
 
-            <div className="mt-auto">
+            <div className="mt-2">
                 <button
                 onClick={onLogin}
                 className="w-full py-4 rounded-2xl font-bold text-lg text-white shadow-lg shadow-purple-500/30 bg-gradient-to-r from-purple-600 to-indigo-600 hover:scale-[1.02] transition-transform active:scale-95"
@@ -94,6 +121,8 @@ const LoginScreen = ({ onLogin, onSignupClick, t }: { onLogin: () => void, onSig
                 Se connecter
                 </button>
             </div>
+
+            <SocialLogin onSocialLogin={onLogin} />
         </div>
 
         <div className="py-6 text-center z-10">
@@ -109,10 +138,11 @@ const LoginScreen = ({ onLogin, onSignupClick, t }: { onLogin: () => void, onSig
   );
 };
 
+// Signup Screen: New user registration
 const SignupScreen = ({ onSignup, onLoginClick, t }: { onSignup: () => void, onLoginClick: () => void, t: any }) => {
     return (
       <div className="h-screen w-full bg-white flex flex-col relative overflow-hidden">
-         {/* Vivid Header */}
+         {/* Vivid Header with different gradient for distinction */}
          <div className="absolute top-0 left-0 w-full h-[40%] bg-gradient-to-bl from-pink-500 to-purple-600 rounded-b-[60px] shadow-2xl z-0"></div>
          <div className="absolute top-[-20px] right-[-20px] w-56 h-56 bg-white/10 rounded-full blur-3xl"></div>
   
@@ -144,7 +174,7 @@ const SignupScreen = ({ onSignup, onLoginClick, t }: { onSignup: () => void, onL
                     </div>
                 </div>
   
-              <div className="mt-6">
+              <div className="mt-4">
                   <button
                   onClick={onSignup}
                   className="w-full py-4 rounded-2xl font-bold text-lg text-white shadow-lg shadow-pink-500/30 bg-gradient-to-r from-pink-500 to-purple-600 hover:scale-[1.02] transition-transform active:scale-95"
@@ -152,6 +182,8 @@ const SignupScreen = ({ onSignup, onLoginClick, t }: { onSignup: () => void, onL
                   S'inscrire
                   </button>
               </div>
+
+              <SocialLogin onSocialLogin={onSignup} />
           </div>
   
           <div className="py-6 text-center z-10">
@@ -167,14 +199,29 @@ const SignupScreen = ({ onSignup, onLoginClick, t }: { onSignup: () => void, onL
     );
   };
 
+// Calendar Strip: Shows dynamic dates centered on today
 const CalendarStrip = ({ isDarkMode }: { isDarkMode: boolean }) => {
-  const days = [
-    { day: 'LUN', date: '24' },
-    { day: 'MAR', date: '25', active: true },
-    { day: 'MER', date: '26' },
-    { day: 'JEU', date: '27' },
-    { day: 'VEN', date: '28' },
-  ];
+    const [days, setDays] = useState<{ day: string, date: string, active: boolean }[]>([]);
+
+    useEffect(() => {
+        const today = new Date();
+        const newDays = [];
+        const formatterDay = new Intl.DateTimeFormat('fr-FR', { weekday: 'short' });
+        const formatterDate = new Intl.DateTimeFormat('fr-FR', { day: 'numeric' });
+
+        // Generate 5 days: 2 before today, today, 2 after today
+        for (let i = -2; i <= 2; i++) {
+            const d = new Date(today);
+            d.setDate(today.getDate() + i);
+            
+            newDays.push({
+                day: formatterDay.format(d).replace('.', ''),
+                date: formatterDate.format(d),
+                active: i === 0 // Today is active
+            });
+        }
+        setDays(newDays);
+    }, []);
 
   // Themed Background: Purple Gradient to match app identity
   return (
@@ -197,19 +244,24 @@ const CalendarStrip = ({ isDarkMode }: { isDarkMode: boolean }) => {
   );
 };
 
+// Home View: The main tracking screen with Map and Bottom Sheet
 const HomeView = ({ user, t, mapMode, setMapMode, isDarkMode }: any) => {
-  const [busProgress, setBusProgress] = useState(20);
-  const [isDelayed, setIsDelayed] = useState(false);
+  const [busProgress, setBusProgress] = useState(20); // 0-100% of route
+  const [isDelayed, setIsDelayed] = useState(false); // Simulated delay status
+  const [mapSearch, setMapSearch] = useState('');
   
   // Sheet State: expanded (true) or collapsed (false)
   const [isSheetExpanded, setIsSheetExpanded] = useState(false); // Default collapsed
   const sheetRef = useRef<HTMLDivElement>(null);
+  
+  // Touch Handling for Drag Gesture
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
 
   // Constants for drag behavior
   const MIN_SWIPE_DISTANCE = 50;
 
+  // Handle Swipe Gestures on the bottom sheet
   const onTouchStart = (e: React.TouchEvent) => {
     setTouchEnd(null); 
     setTouchStart(e.targetTouches[0].clientY);
@@ -233,10 +285,12 @@ const HomeView = ({ user, t, mapMode, setMapMode, isDarkMode }: any) => {
     }
   }
 
+  // Simulate Bus Movement
   useEffect(() => {
     const interval = setInterval(() => {
       setBusProgress(prev => {
-        if (prev >= 100) return 0;
+        if (prev >= 100) return 0; // Reset loop
+        // Randomly simulate delay in the middle of route
         if (prev > 45 && prev < 55 && Math.random() > 0.8) {
              setIsDelayed(true);
              return prev + 0.1; 
@@ -252,6 +306,24 @@ const HomeView = ({ user, t, mapMode, setMapMode, isDarkMode }: any) => {
       setIsSheetExpanded(true);
   };
 
+  // Share Functionality: Uses the Web Share API
+  const handleShare = async () => {
+      if (navigator.share) {
+          try {
+              await navigator.share({
+                  title: 'Suivi Bus Hafla',
+                  text: `Le bus de ${user.childName} est en route vers l'école. Arrivée estimée dans ${Math.floor((100 - busProgress) / 5)} min. Suivez le trajet en direct !`,
+                  url: window.location.href // In a real app, this would be a deep link
+              });
+          } catch (error) {
+              console.log('Error sharing:', error);
+          }
+      } else {
+          // Fallback for browsers that don't support share API
+          alert('Le partage n\'est pas supporté sur ce navigateur.');
+      }
+  };
+
   const stops = [
     { name: t.home, time: '07:30', status: 'completed' },
     { name: 'Avenue H. Bourguiba', time: '07:45', status: 'completed' },
@@ -265,6 +337,27 @@ const HomeView = ({ user, t, mapMode, setMapMode, isDarkMode }: any) => {
       {/* Calendar Strip - Now Themed */}
       <CalendarStrip isDarkMode={isDarkMode} />
 
+      {/* Floating Map Search Bar */}
+      <div className="absolute top-28 left-4 right-4 z-20">
+        <div className={`flex items-center gap-3 px-4 py-3 rounded-full shadow-lg backdrop-blur-md transition-colors ${
+            isDarkMode ? 'bg-slate-800/80 text-white border border-slate-700' : 'bg-white/90 text-gray-800 border border-gray-100'
+        }`}>
+            <Icons.Search className={`w-5 h-5 ${isDarkMode ? 'text-gray-400' : 'text-purple-600'}`} />
+            <input 
+                type="text" 
+                placeholder="Rechercher une adresse..." 
+                className="bg-transparent border-none outline-none w-full text-sm font-medium placeholder-gray-500"
+                value={mapSearch}
+                onChange={(e) => setMapSearch(e.target.value)}
+            />
+            {mapSearch && (
+                <button onClick={() => setMapSearch('')} className="p-1">
+                    <Icons.Close size={16} className="text-gray-400" />
+                </button>
+            )}
+        </div>
+      </div>
+
       {/* Map Implementation */}
       <div className="flex-grow relative mt-0 z-0">
         <MapVisual 
@@ -273,6 +366,7 @@ const HomeView = ({ user, t, mapMode, setMapMode, isDarkMode }: any) => {
             mode={mapMode} 
             isDarkMode={isDarkMode}
             onBusClick={handleBusClick}
+            searchQuery={mapSearch}
         />
       </div>
 
@@ -336,25 +430,31 @@ const HomeView = ({ user, t, mapMode, setMapMode, isDarkMode }: any) => {
                     </button>
                 </div>
 
-                {/* Quick Actions (Parent Needs) - Only visible when expanded usually, but here styled inline */}
-                <div className="grid grid-cols-2 gap-4 mb-8">
-                     <button className="bg-slate-800 p-3 rounded-xl border border-slate-700 flex items-center gap-3 active:bg-slate-700 transition-colors">
+                {/* Quick Actions Grid (Parent Needs) */}
+                <div className="grid grid-cols-3 gap-3 mb-8">
+                     <button className="bg-slate-800 p-2.5 rounded-xl border border-slate-700 flex flex-col items-center justify-center gap-2 active:bg-slate-700 transition-colors h-24">
                         <div className="bg-red-500/20 p-2 rounded-lg text-red-400">
                             <Icons.CalendarOff size={20} />
                         </div>
-                        <div className="text-left">
-                            <span className="block text-white font-bold text-sm">Signaler</span>
-                            <span className="block text-gray-400 text-xs">Absence</span>
-                        </div>
+                        <span className="text-gray-300 text-[10px] font-bold text-center leading-tight">Signaler Absence</span>
                      </button>
-                     <button className="bg-slate-800 p-3 rounded-xl border border-slate-700 flex items-center gap-3 active:bg-slate-700 transition-colors">
+                     
+                     <button className="bg-slate-800 p-2.5 rounded-xl border border-slate-700 flex flex-col items-center justify-center gap-2 active:bg-slate-700 transition-colors h-24">
                         <div className="bg-blue-500/20 p-2 rounded-lg text-blue-400">
                             <Icons.School size={20} />
                         </div>
-                        <div className="text-left">
-                            <span className="block text-white font-bold text-sm">Contacter</span>
-                            <span className="block text-gray-400 text-xs">L'École</span>
+                        <span className="text-gray-300 text-[10px] font-bold text-center leading-tight">Contacter École</span>
+                     </button>
+
+                     {/* New Share Button */}
+                     <button 
+                        onClick={handleShare}
+                        className="bg-slate-800 p-2.5 rounded-xl border border-slate-700 flex flex-col items-center justify-center gap-2 active:bg-slate-700 transition-colors h-24"
+                     >
+                        <div className="bg-purple-500/20 p-2 rounded-lg text-purple-400">
+                            <Icons.Share size={20} />
                         </div>
+                        <span className="text-gray-300 text-[10px] font-bold text-center leading-tight">Partager Trajet</span>
                      </button>
                 </div>
 
@@ -404,6 +504,7 @@ const HomeView = ({ user, t, mapMode, setMapMode, isDarkMode }: any) => {
 };
 
 // --- NEW VIEW: Child Profile ---
+// Displays static details about the child (School, Class, ID Card)
 const ChildProfileView = ({ user, onBack, t }: any) => {
     return (
         <div className="h-full bg-gray-50 dark:bg-slate-900 flex flex-col p-6 overflow-y-auto transition-colors duration-300">
@@ -434,7 +535,7 @@ const ChildProfileView = ({ user, onBack, t }: any) => {
                     <p className="text-gray-800 dark:text-white font-medium mt-1">3ème Année</p>
                 </div>
                 
-                 {/* QR Code Section */}
+                 {/* QR Code Section - Simulated */}
                 <div className="bg-purple-600 p-6 rounded-2xl shadow-lg mt-4 flex items-center justify-between text-white">
                     <div>
                         <h3 className="font-bold text-lg">Carte d'accès</h3>
@@ -450,79 +551,140 @@ const ChildProfileView = ({ user, onBack, t }: any) => {
 }
 
 // --- NEW VIEW: History ---
+// Displays past rides
 const HistoryView = ({ onBack, t }: any) => {
+    const [search, setSearch] = useState('');
+    
+    // Filter history based on search
+    const filteredHistory = MOCK_HISTORY.filter(ride => 
+        ride.date.toLowerCase().includes(search.toLowerCase()) || 
+        ride.pickup.toLowerCase().includes(search.toLowerCase()) ||
+        ride.dropoff.toLowerCase().includes(search.toLowerCase())
+    );
+
     return (
         <div className="h-full bg-gray-50 dark:bg-slate-900 flex flex-col p-6 overflow-y-auto transition-colors duration-300">
-             <div className="flex items-center gap-4 mb-8 pt-6">
+             <div className="flex items-center gap-4 mb-6 pt-6">
                 <button onClick={onBack} className="p-2 bg-white dark:bg-slate-800 rounded-full shadow-sm"><Icons.Back className="w-5 h-5 text-gray-700 dark:text-white" /></button>
                 <h1 className="text-2xl font-bold text-gray-800 dark:text-white">{t.history}</h1>
             </div>
 
-            <div className="space-y-4">
-                {MOCK_HISTORY.map((ride) => (
-                    <div key={ride.id} className="bg-white dark:bg-slate-800 p-4 rounded-xl shadow-sm flex flex-col gap-3">
-                        <div className="flex justify-between items-center">
-                            <span className="text-sm font-bold text-gray-800 dark:text-white">{ride.date}</span>
-                            <span className={`px-2 py-1 rounded text-xs font-bold ${
-                                ride.status === 'completed' ? 'bg-green-100 text-green-600' : 
-                                ride.status === 'absent' ? 'bg-red-100 text-red-600' : 'bg-gray-100 text-gray-600'
-                            }`}>
-                                {ride.status === 'completed' ? 'Terminé' : 'Absent'}
-                            </span>
+            {/* Search Input */}
+            <div className="mb-6 relative">
+                <Icons.Search className="absolute left-4 top-3.5 w-5 h-5 text-gray-400" />
+                <input 
+                    type="text" 
+                    placeholder="Rechercher par date ou lieu..." 
+                    className="w-full pl-11 pr-4 py-3 rounded-xl bg-white dark:bg-slate-800 border-none shadow-sm focus:ring-2 focus:ring-purple-500 text-gray-700 dark:text-white placeholder-gray-400"
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                />
+                {search && (
+                    <button onClick={() => setSearch('')} className="absolute right-4 top-3.5 text-gray-400">
+                        <Icons.Close size={18} />
+                    </button>
+                )}
+            </div>
+
+            <div className="space-y-4 pb-20">
+                {filteredHistory.length > 0 ? (
+                    filteredHistory.map((ride) => (
+                        <div key={ride.id} className="bg-white dark:bg-slate-800 p-4 rounded-xl shadow-sm flex flex-col gap-3">
+                            <div className="flex justify-between items-center">
+                                <span className="text-sm font-bold text-gray-800 dark:text-white">{ride.date}</span>
+                                <span className={`px-2 py-1 rounded text-xs font-bold ${
+                                    ride.status === 'completed' ? 'bg-green-100 text-green-600' : 
+                                    ride.status === 'absent' ? 'bg-red-100 text-red-600' : 'bg-gray-100 text-gray-600'
+                                }`}>
+                                    {ride.status === 'completed' ? 'Terminé' : 'Absent'}
+                                </span>
+                            </div>
+                            <div className="flex items-center gap-4 relative">
+                                <div className="absolute left-1.5 top-1 bottom-1 w-0.5 bg-gray-200 dark:bg-slate-700"></div>
+                                <div className="space-y-4 w-full">
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-3 h-3 bg-purple-600 rounded-full z-10"></div>
+                                        <span className="text-sm text-gray-600 dark:text-gray-300">{ride.pickup}</span>
+                                    </div>
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-3 h-3 border-2 border-purple-600 bg-white dark:bg-slate-800 rounded-full z-10"></div>
+                                        <span className="text-sm text-gray-600 dark:text-gray-300">{ride.dropoff}</span>
+                                    </div>
+                                </div>
+                                <div className="text-right">
+                                    <span className="text-xs text-gray-400 block">Durée</span>
+                                    <span className="text-sm font-mono text-gray-700 dark:text-gray-200">{ride.duration}</span>
+                                </div>
+                            </div>
                         </div>
-                        <div className="flex items-center gap-4 relative">
-                             <div className="absolute left-1.5 top-1 bottom-1 w-0.5 bg-gray-200 dark:bg-slate-700"></div>
-                             <div className="space-y-4 w-full">
-                                 <div className="flex items-center gap-3">
-                                     <div className="w-3 h-3 bg-purple-600 rounded-full z-10"></div>
-                                     <span className="text-sm text-gray-600 dark:text-gray-300">{ride.pickup}</span>
-                                 </div>
-                                 <div className="flex items-center gap-3">
-                                     <div className="w-3 h-3 border-2 border-purple-600 bg-white dark:bg-slate-800 rounded-full z-10"></div>
-                                     <span className="text-sm text-gray-600 dark:text-gray-300">{ride.dropoff}</span>
-                                 </div>
-                             </div>
-                             <div className="text-right">
-                                 <span className="text-xs text-gray-400 block">Durée</span>
-                                 <span className="text-sm font-mono text-gray-700 dark:text-gray-200">{ride.duration}</span>
-                             </div>
-                        </div>
-                    </div>
-                ))}
+                    ))
+                ) : (
+                    <div className="text-center py-10 text-gray-500">Aucun trajet trouvé.</div>
+                )}
             </div>
         </div>
     )
 }
 
+// Notification List View
 const NotificationView = ({ notifications, t }: any) => {
+  const [search, setSearch] = useState('');
+
+  const filteredNotifs = notifications.filter((n: Notification) => 
+    n.title.toLowerCase().includes(search.toLowerCase()) || 
+    n.message.toLowerCase().includes(search.toLowerCase())
+  );
+
   return (
     <div className="h-full bg-gray-50 dark:bg-slate-900 flex flex-col pb-24 transition-colors duration-300">
       <div className="bg-white dark:bg-slate-800 p-6 pt-12 shadow-sm z-10 sticky top-0">
-         <h1 className="text-2xl font-bold text-gray-800 dark:text-white">{t.notifications}</h1>
+         <h1 className="text-2xl font-bold text-gray-800 dark:text-white mb-4">{t.notifications}</h1>
+         
+         {/* Search Input */}
+         <div className="relative">
+            <Icons.Search className="absolute left-3 top-3 w-4 h-4 text-gray-400" />
+            <input 
+                type="text" 
+                placeholder="Rechercher une notification..." 
+                className="w-full pl-10 pr-4 py-2.5 rounded-lg bg-gray-100 dark:bg-slate-700 border-none focus:ring-2 focus:ring-purple-500 text-sm text-gray-800 dark:text-white placeholder-gray-500"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+            />
+            {search && (
+                <button onClick={() => setSearch('')} className="absolute right-3 top-2.5 text-gray-400">
+                    <Icons.Close size={16} />
+                </button>
+            )}
+         </div>
       </div>
 
       <div className="p-4 space-y-4 overflow-y-auto no-scrollbar flex-grow">
-        {notifications.map((notif: Notification) => (
-          <div key={notif.id} className={`p-4 rounded-2xl shadow-sm border-l-4 transition-all duration-300 dark:bg-slate-800 ${
-            notif.type === 'arrival' ? 'bg-white border-green-500' :
-            notif.type === 'delay' ? 'bg-orange-50 dark:bg-slate-700 border-orange-500' :
-            notif.type === 'incident' ? 'bg-red-50 dark:bg-slate-700 border-red-500' :
-            'bg-white border-purple-500'
-          }`}>
-            <div className="flex justify-between items-start mb-1">
-               <h3 className={`font-bold ${
-                   notif.type === 'delay' ? 'text-orange-700 dark:text-orange-400' : 'text-gray-800 dark:text-white'
-               }`}>{notif.title}</h3>
-               <span className="text-xs text-gray-400 bg-white/50 dark:bg-slate-900/50 px-2 py-1 rounded-full">{notif.time}</span>
+        {filteredNotifs.length > 0 ? (
+            filteredNotifs.map((notif: Notification) => (
+            <div key={notif.id} className={`p-4 rounded-2xl shadow-sm border-l-4 transition-all duration-300 dark:bg-slate-800 ${
+                notif.type === 'arrival' ? 'bg-white border-green-500' :
+                notif.type === 'delay' ? 'bg-orange-50 dark:bg-slate-700 border-orange-500' :
+                notif.type === 'incident' ? 'bg-red-50 dark:bg-slate-700 border-red-500' :
+                'bg-white border-purple-500'
+            }`}>
+                <div className="flex justify-between items-start mb-1">
+                <h3 className={`font-bold ${
+                    notif.type === 'delay' ? 'text-orange-700 dark:text-orange-400' : 'text-gray-800 dark:text-white'
+                }`}>{notif.title}</h3>
+                <span className="text-xs text-gray-400 bg-white/50 dark:bg-slate-900/50 px-2 py-1 rounded-full">{notif.time}</span>
+                </div>
+                <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">{notif.message}</p>
             </div>
-            <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">{notif.message}</p>
-          </div>
-        ))}
+            ))
+        ) : (
+            <div className="text-center py-10 text-gray-500">Aucune notification trouvée.</div>
+        )}
       </div>
     </div>
   );
 };
 
+// Profile View: User Settings, Navigation to Child Profile, Theme, Language
 const ProfileView = ({ user, setUser, onLogout, t, isDarkMode, setIsDarkMode, lang, setLang, navigate }: any) => {
     const [isEditing, setIsEditing] = useState(false);
     const [editName, setEditName] = useState(user.name);
@@ -535,6 +697,7 @@ const ProfileView = ({ user, setUser, onLogout, t, isDarkMode, setIsDarkMode, la
 
     return (
         <div className="h-full bg-gray-50 dark:bg-slate-900 flex flex-col pb-24 transition-colors duration-300">
+            {/* Header / Avatar Card */}
             <div className="bg-purple-600 dark:bg-purple-800 text-white p-6 pt-12 pb-12 rounded-b-[40px] shadow-lg relative transition-colors duration-300">
                  <div className="flex justify-between items-start mb-4">
                      <h2 className="text-xl font-bold">{t.profile}</h2>
@@ -621,7 +784,7 @@ const ProfileView = ({ user, setUser, onLogout, t, isDarkMode, setIsDarkMode, la
 };
 
 // --- MAIN APP COMPONENT ---
-
+// Orchestrates the view navigation and global state
 export default function App() {
   const [currentView, setCurrentView] = useState<AppView>(AppView.SPLASH);
   const [lang, setLang] = useState<Language>('fr');
@@ -649,6 +812,7 @@ export default function App() {
     setCurrentView(AppView.LOGIN);
   };
 
+  // Notification simulation
   useEffect(() => {
     const timer = setTimeout(() => {
         const newNotif: Notification = {
@@ -664,6 +828,7 @@ export default function App() {
     return () => clearTimeout(timer);
   }, []);
 
+  // Main Render Logic
   const renderContent = () => {
     switch (currentView) {
       case AppView.SPLASH:
@@ -697,11 +862,12 @@ export default function App() {
     }
   };
 
+  // Determine if we should show the bottom tab bar
   const showNav = [AppView.HOME, AppView.NOTIFICATIONS, AppView.PROFILE].includes(currentView);
 
   return (
     <div className={`w-full h-screen flex items-center justify-center overflow-hidden transition-colors duration-300 ${isDarkMode ? 'dark bg-slate-900' : 'bg-gray-100'}`} dir={lang === 'ar' ? 'rtl' : 'ltr'}>
-        {/* Mobile Container Frame */}
+        {/* Mobile Container Frame: Simulates a mobile device view on desktop, or fills screen on mobile */}
         <div className="w-full h-full max-w-md bg-white dark:bg-slate-900 shadow-2xl relative overflow-hidden flex flex-col transition-colors duration-300">
             
             {/* View Content */}

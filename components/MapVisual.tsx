@@ -1,6 +1,6 @@
-
 import React, { useEffect, useRef } from 'react';
 import { MapMode } from '../types';
+import { Icons } from './Icons';
 
 interface MapVisualProps {
   progress: number; // 0 to 100
@@ -8,12 +8,13 @@ interface MapVisualProps {
   mode: MapMode;
   isDarkMode: boolean;
   onBusClick?: () => void;
+  searchQuery?: string;
 }
 
 // Coordinate type
 type LatLng = [number, number];
 
-export const MapVisual: React.FC<MapVisualProps> = ({ progress, isDelayed, mode, isDarkMode, onBusClick }) => {
+export const MapVisual: React.FC<MapVisualProps> = ({ progress, isDelayed, mode, isDarkMode, onBusClick, searchQuery }) => {
   const mapRef = useRef<any>(null);
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const busMarkerRef = useRef<any>(null);
@@ -69,6 +70,31 @@ export const MapVisual: React.FC<MapVisualProps> = ({ progress, isDelayed, mode,
     return { pos: routePoints[routePoints.length - 1], bearing: 0 };
   };
 
+  const handleRecenter = () => {
+    if (mapRef.current && busMarkerRef.current) {
+        const busPos = busMarkerRef.current.getLatLng();
+        mapRef.current.setView(busPos, 14, { animate: true });
+    }
+  };
+
+  const handleZoomIn = () => mapRef.current?.zoomIn();
+  const handleZoomOut = () => mapRef.current?.zoomOut();
+
+  // Search Effect
+  useEffect(() => {
+    if (!mapRef.current || !searchQuery) return;
+    
+    const query = searchQuery.toLowerCase().trim();
+    
+    if (query.includes('ecole') || query.includes('école') || query.includes('school') || query.includes('ghazala')) {
+        const endPoint = routePoints[routePoints.length - 1];
+        mapRef.current.flyTo(endPoint, 16, { duration: 1.5 });
+    } else if (query.includes('maison') || query.includes('home') || query.includes('tunis')) {
+        const startPoint = routePoints[0];
+        mapRef.current.flyTo(startPoint, 16, { duration: 1.5 });
+    }
+  }, [searchQuery]);
+
   useEffect(() => {
     const L = (window as any).L;
     if (!L || !mapContainerRef.current) return;
@@ -114,7 +140,12 @@ export const MapVisual: React.FC<MapVisualProps> = ({ progress, isDelayed, mode,
         iconSize: [32, 32],
         iconAnchor: [16, 16]
       });
-      L.marker(routePoints[0], { icon: homeIcon }).addTo(mapRef.current);
+      const homeMarker = L.marker(routePoints[0], { icon: homeIcon }).addTo(mapRef.current);
+      homeMarker.bindTooltip("Maison", { 
+          permanent: true, 
+          direction: 'bottom', 
+          className: 'bg-white text-xs font-bold px-2 py-1 rounded border border-gray-200 shadow-sm text-purple-700 mt-2' 
+      }).openTooltip();
 
       // End Marker (School)
       const schoolIcon = L.divIcon({
@@ -123,7 +154,12 @@ export const MapVisual: React.FC<MapVisualProps> = ({ progress, isDelayed, mode,
         iconSize: [32, 32],
         iconAnchor: [16, 32]
       });
-      L.marker(routePoints[routePoints.length - 1], { icon: schoolIcon }).addTo(mapRef.current);
+      const schoolMarker = L.marker(routePoints[routePoints.length - 1], { icon: schoolIcon }).addTo(mapRef.current);
+      schoolMarker.bindTooltip("École El Ghazala", { 
+        permanent: true, 
+        direction: 'bottom', 
+        className: 'bg-white text-xs font-bold px-2 py-1 rounded border border-gray-200 shadow-sm text-purple-700 mt-2' 
+      }).openTooltip();
 
       // Bus Marker
       const busHtml = `
@@ -179,9 +215,33 @@ export const MapVisual: React.FC<MapVisualProps> = ({ progress, isDelayed, mode,
   }, [progress, isDelayed]);
 
   return (
-    <div className="w-full h-full relative">
+    <div className="w-full h-full relative group">
        <div ref={mapContainerRef} className="w-full h-full z-0" style={{background: isDarkMode ? '#1e293b' : '#f3f4f6'}}></div>
-       {/* Gradient Overlay for better UI integration at top - now removed for calendar clarity */}
+       
+       {/* Map Controls */}
+       <div className="absolute right-4 top-28 flex flex-col gap-3 z-[400]">
+           <button 
+             onClick={handleRecenter}
+             className="w-10 h-10 bg-white dark:bg-slate-800 rounded-full shadow-lg flex items-center justify-center text-purple-600 dark:text-purple-400 hover:scale-105 transition-transform"
+             title="Recentrer sur le bus"
+           >
+               <Icons.Navigation className="w-5 h-5" />
+           </button>
+           <div className="flex flex-col bg-white dark:bg-slate-800 rounded-full shadow-lg overflow-hidden">
+             <button 
+                onClick={handleZoomIn}
+                className="w-10 h-10 flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700 border-b border-gray-100 dark:border-slate-700"
+             >
+                 <span className="text-xl font-bold">+</span>
+             </button>
+             <button 
+                onClick={handleZoomOut}
+                className="w-10 h-10 flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700"
+             >
+                 <span className="text-xl font-bold">-</span>
+             </button>
+           </div>
+       </div>
     </div>
   );
 };
