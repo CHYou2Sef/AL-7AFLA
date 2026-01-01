@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef } from 'react';
 import { AppView, User, Notification, Language, MapMode } from './types';
 import { Icons } from './components/Icons';
@@ -34,11 +35,11 @@ const SplashScreen = ({ onFinish }: { onFinish: () => void }) => {
 };
 
 // Social Login Component
-const SocialLogin = ({ onSocialLogin }: { onSocialLogin: () => void }) => (
+const SocialLogin = ({ onSocialLogin, t }: { onSocialLogin: () => void, t: any }) => (
   <div className="w-full flex flex-col items-center gap-4 mt-4">
     <div className="flex items-center w-full gap-2">
       <div className="h-px bg-gray-200 flex-1"></div>
-      <span className="text-xs text-gray-400 font-medium">Ou continuer avec</span>
+      <span className="text-xs text-gray-400 font-medium">{t.orContinueWith}</span>
       <div className="h-px bg-gray-200 flex-1"></div>
     </div>
     <div className="flex gap-4 justify-center w-full">
@@ -94,7 +95,7 @@ const LoginScreen = ({ onLogin, onSignupClick, t }: { onLogin: () => void, onSig
                     </div>
                 </div>
                 <div>
-                    <label className="block text-sm font-bold text-gray-700 mb-1 ml-1">Mot de passe</label>
+                    <label className="block text-sm font-bold text-gray-700 mb-1 ml-1">{t.password}</label>
                     <div className="relative">
                         <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                         <Icons.Lock className="w-5 h-5 text-purple-500" />
@@ -108,7 +109,7 @@ const LoginScreen = ({ onLogin, onSignupClick, t }: { onLogin: () => void, onSig
                         />
                     </div>
                     <div className="text-right mt-2">
-                        <a href="#" className="text-sm text-purple-600 font-bold hover:underline">Mot de passe oublié ?</a>
+                        <a href="#" className="text-sm text-purple-600 font-bold hover:underline">{t.forgotPassword}</a>
                     </div>
                 </div>
             </div>
@@ -118,18 +119,18 @@ const LoginScreen = ({ onLogin, onSignupClick, t }: { onLogin: () => void, onSig
                 onClick={onLogin}
                 className="w-full py-4 rounded-2xl font-bold text-lg text-white shadow-lg shadow-purple-500/30 bg-gradient-to-r from-purple-600 to-indigo-600 hover:scale-[1.02] transition-transform active:scale-95"
                 >
-                Se connecter
+                {t.loginBtn}
                 </button>
             </div>
 
-            <SocialLogin onSocialLogin={onLogin} />
+            <SocialLogin onSocialLogin={onLogin} t={t} />
         </div>
 
         <div className="py-6 text-center z-10">
             <p className="text-gray-600">
-                Pas encore de compte ?{' '}
+                {t.noAccount}{' '}
                 <button onClick={onSignupClick} className="text-purple-600 font-bold hover:underline">
-                    S'inscrire
+                    {t.signupBtn}
                 </button>
             </p>
         </div>
@@ -148,8 +149,8 @@ const SignupScreen = ({ onSignup, onLoginClick, t }: { onSignup: () => void, onL
   
         <div className="z-10 flex flex-col px-8 pt-16 h-full">
           <div className="mb-6 text-center">
-              <h2 className="text-3xl font-bold text-white mb-2">Créer un compte</h2>
-              <p className="text-purple-100">Rejoignez la communauté Hafla</p>
+              <h2 className="text-3xl font-bold text-white mb-2">{t.createAccount}</h2>
+              <p className="text-purple-100">{t.joinCommunity}</p>
           </div>
           
           <div className="bg-white rounded-3xl shadow-xl p-8 flex flex-col gap-4 flex-grow max-h-[550px] overflow-y-auto no-scrollbar">
@@ -157,19 +158,19 @@ const SignupScreen = ({ onSignup, onLoginClick, t }: { onSignup: () => void, onL
                {/* Form Fields */}
                 <div className="space-y-4">
                     <div>
-                        <label className="block text-sm font-bold text-gray-700 mb-1">Nom complet</label>
-                        <input type="text" className="block w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 outline-none" placeholder="Votre nom" />
+                        <label className="block text-sm font-bold text-gray-700 mb-1">{t.fullName}</label>
+                        <input type="text" className="block w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 outline-none" placeholder="..." />
                     </div>
                     <div>
-                        <label className="block text-sm font-bold text-gray-700 mb-1">Téléphone</label>
+                        <label className="block text-sm font-bold text-gray-700 mb-1">{t.phoneLabel}</label>
                         <input type="tel" className="block w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 outline-none" placeholder="20 123 456" />
                     </div>
                     <div>
-                        <label className="block text-sm font-bold text-gray-700 mb-1">Code Enfant (Fourni par l'école)</label>
+                        <label className="block text-sm font-bold text-gray-700 mb-1">{t.childCode}</label>
                         <input type="text" className="block w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 outline-none" placeholder="ex: HFL-8821" />
                     </div>
                     <div>
-                        <label className="block text-sm font-bold text-gray-700 mb-1">Mot de passe</label>
+                        <label className="block text-sm font-bold text-gray-700 mb-1">{t.password}</label>
                         <input type="password" className="block w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 outline-none" placeholder="•••••••" />
                     </div>
                 </div>
@@ -179,18 +180,18 @@ const SignupScreen = ({ onSignup, onLoginClick, t }: { onSignup: () => void, onL
                   onClick={onSignup}
                   className="w-full py-4 rounded-2xl font-bold text-lg text-white shadow-lg shadow-pink-500/30 bg-gradient-to-r from-pink-500 to-purple-600 hover:scale-[1.02] transition-transform active:scale-95"
                   >
-                  S'inscrire
+                  {t.signupBtn}
                   </button>
               </div>
 
-              <SocialLogin onSocialLogin={onSignup} />
+              <SocialLogin onSocialLogin={onSignup} t={t} />
           </div>
   
           <div className="py-6 text-center z-10">
               <p className="text-gray-600">
-                  Déjà membre ?{' '}
+                  {t.alreadyMember}{' '}
                   <button onClick={onLoginClick} className="text-purple-600 font-bold hover:underline">
-                      Se connecter
+                      {t.loginBtn}
                   </button>
               </p>
           </div>
@@ -200,14 +201,14 @@ const SignupScreen = ({ onSignup, onLoginClick, t }: { onSignup: () => void, onL
   };
 
 // Calendar Strip: Shows dynamic dates centered on today
-const CalendarStrip = ({ isDarkMode }: { isDarkMode: boolean }) => {
+const CalendarStrip = ({ isDarkMode, lang }: { isDarkMode: boolean, lang: Language }) => {
     const [days, setDays] = useState<{ day: string, date: string, active: boolean }[]>([]);
 
     useEffect(() => {
         const today = new Date();
         const newDays = [];
-        const formatterDay = new Intl.DateTimeFormat('fr-FR', { weekday: 'short' });
-        const formatterDate = new Intl.DateTimeFormat('fr-FR', { day: 'numeric' });
+        const formatterDay = new Intl.DateTimeFormat(lang === 'fr' ? 'fr-FR' : (lang === 'ar' ? 'ar-SA' : 'en-US'), { weekday: 'short' });
+        const formatterDate = new Intl.DateTimeFormat(lang === 'fr' ? 'fr-FR' : (lang === 'ar' ? 'ar-SA' : 'en-US'), { day: 'numeric' });
 
         // Generate 5 days: 2 before today, today, 2 after today
         for (let i = -2; i <= 2; i++) {
@@ -221,7 +222,7 @@ const CalendarStrip = ({ isDarkMode }: { isDarkMode: boolean }) => {
             });
         }
         setDays(newDays);
-    }, []);
+    }, [lang]);
 
   // Themed Background: Purple Gradient to match app identity
   return (
@@ -245,7 +246,7 @@ const CalendarStrip = ({ isDarkMode }: { isDarkMode: boolean }) => {
 };
 
 // Home View: The main tracking screen with Map and Bottom Sheet
-const HomeView = ({ user, t, mapMode, setMapMode, isDarkMode }: any) => {
+const HomeView = ({ user, t, mapMode, setMapMode, isDarkMode, lang }: any) => {
   const [busProgress, setBusProgress] = useState(20); // 0-100% of route
   const [isDelayed, setIsDelayed] = useState(false); // Simulated delay status
   const [mapSearch, setMapSearch] = useState('');
@@ -335,7 +336,7 @@ const HomeView = ({ user, t, mapMode, setMapMode, isDarkMode }: any) => {
     <div className={`h-full relative flex flex-col transition-colors duration-300 ${isDarkMode ? 'bg-slate-900' : 'bg-gray-50'}`}>
       
       {/* Calendar Strip - Now Themed */}
-      <CalendarStrip isDarkMode={isDarkMode} />
+      <CalendarStrip isDarkMode={isDarkMode} lang={lang} />
 
       {/* Floating Map Search Bar */}
       <div className="absolute top-28 left-4 right-4 z-20">
@@ -345,7 +346,7 @@ const HomeView = ({ user, t, mapMode, setMapMode, isDarkMode }: any) => {
             <Icons.Search className={`w-5 h-5 ${isDarkMode ? 'text-gray-400' : 'text-purple-600'}`} />
             <input 
                 type="text" 
-                placeholder="Rechercher une adresse..." 
+                placeholder={t.searchMap} 
                 className="bg-transparent border-none outline-none w-full text-sm font-medium placeholder-gray-500"
                 value={mapSearch}
                 onChange={(e) => setMapSearch(e.target.value)}
@@ -393,7 +394,7 @@ const HomeView = ({ user, t, mapMode, setMapMode, isDarkMode }: any) => {
             {/* Header: Status & ETA */}
             <div className="flex justify-between items-start mb-6 mt-2">
                 <div>
-                    <h3 className="text-xl font-bold text-white mb-1">Trajet vers École</h3>
+                    <h3 className="text-xl font-bold text-white mb-1">{t.routeToSchool}</h3>
                     <div className="flex items-center gap-2">
                          <span className={`flex h-3 w-3 relative`}>
                             <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${isDelayed ? 'bg-orange-500' : 'bg-green-400'}`}></span>
@@ -406,7 +407,7 @@ const HomeView = ({ user, t, mapMode, setMapMode, isDarkMode }: any) => {
                 </div>
                 <div className="text-right">
                     <div className="text-3xl font-bold text-purple-400">
-                        {Math.floor((100 - busProgress) / 5)} <span className="text-lg text-gray-400 font-normal">min</span>
+                        {Math.floor((100 - busProgress) / 5)} <span className="text-lg text-gray-400 font-normal">{t.minutes}</span>
                     </div>
                     <div className="text-xs text-gray-500 uppercase tracking-wide">{t.estimatedTime}</div>
                 </div>
@@ -436,14 +437,14 @@ const HomeView = ({ user, t, mapMode, setMapMode, isDarkMode }: any) => {
                         <div className="bg-red-500/20 p-2 rounded-lg text-red-400">
                             <Icons.CalendarOff size={20} />
                         </div>
-                        <span className="text-gray-300 text-[10px] font-bold text-center leading-tight">Signaler Absence</span>
+                        <span className="text-gray-300 text-[10px] font-bold text-center leading-tight">{t.reportAbsence}</span>
                      </button>
                      
                      <button className="bg-slate-800 p-2.5 rounded-xl border border-slate-700 flex flex-col items-center justify-center gap-2 active:bg-slate-700 transition-colors h-24">
                         <div className="bg-blue-500/20 p-2 rounded-lg text-blue-400">
                             <Icons.School size={20} />
                         </div>
-                        <span className="text-gray-300 text-[10px] font-bold text-center leading-tight">Contacter École</span>
+                        <span className="text-gray-300 text-[10px] font-bold text-center leading-tight">{t.contactSchool}</span>
                      </button>
 
                      {/* New Share Button */}
@@ -454,13 +455,13 @@ const HomeView = ({ user, t, mapMode, setMapMode, isDarkMode }: any) => {
                         <div className="bg-purple-500/20 p-2 rounded-lg text-purple-400">
                             <Icons.Share size={20} />
                         </div>
-                        <span className="text-gray-300 text-[10px] font-bold text-center leading-tight">Partager Trajet</span>
+                        <span className="text-gray-300 text-[10px] font-bold text-center leading-tight">{t.shareRoute}</span>
                      </button>
                 </div>
 
                 {/* Route Details Section */}
                 <div className={`transition-opacity duration-300 ${isSheetExpanded ? 'opacity-100' : 'opacity-100'}`}>
-                   <h3 className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-6 pl-1">ITINÉRAIRE</h3>
+                   <h3 className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-6 pl-1">{t.itinerary}</h3>
                    <div className="relative pl-2">
                       {/* Vertical Line */}
                       <div className="absolute left-[7px] top-2 bottom-4 w-0.5 bg-slate-700"></div>
@@ -523,23 +524,23 @@ const ChildProfileView = ({ user, onBack, t }: any) => {
 
             <div className="space-y-4">
                 <div className="bg-white dark:bg-slate-800 p-4 rounded-xl shadow-sm">
-                    <label className="text-xs text-gray-400 uppercase font-bold">École</label>
+                    <label className="text-xs text-gray-400 uppercase font-bold">{t.school}</label>
                     <p className="text-gray-800 dark:text-white font-medium mt-1">{user.childSchool}</p>
                 </div>
                 <div className="bg-white dark:bg-slate-800 p-4 rounded-xl shadow-sm">
                     <label className="text-xs text-gray-400 uppercase font-bold">Age</label>
-                    <p className="text-gray-800 dark:text-white font-medium mt-1">{user.childAge} ans</p>
+                    <p className="text-gray-800 dark:text-white font-medium mt-1">{user.childAge} {t.ageSuffix}</p>
                 </div>
                 <div className="bg-white dark:bg-slate-800 p-4 rounded-xl shadow-sm">
-                    <label className="text-xs text-gray-400 uppercase font-bold">Classe</label>
-                    <p className="text-gray-800 dark:text-white font-medium mt-1">3ème Année</p>
+                    <label className="text-xs text-gray-400 uppercase font-bold">{t.classLabel}</label>
+                    <p className="text-gray-800 dark:text-white font-medium mt-1">{t.grade3}</p>
                 </div>
                 
                  {/* QR Code Section - Simulated */}
                 <div className="bg-purple-600 p-6 rounded-2xl shadow-lg mt-4 flex items-center justify-between text-white">
                     <div>
-                        <h3 className="font-bold text-lg">Carte d'accès</h3>
-                        <p className="text-purple-200 text-xs">Scan pour monter dans le bus</p>
+                        <h3 className="font-bold text-lg">{t.accessCard}</h3>
+                        <p className="text-purple-200 text-xs">{t.scanBus}</p>
                     </div>
                     <div className="bg-white p-2 rounded-lg">
                         <div className="w-12 h-12 bg-gray-900 opacity-20"></div> {/* Placeholder for QR */}
@@ -574,7 +575,7 @@ const HistoryView = ({ onBack, t }: any) => {
                 <Icons.Search className="absolute left-4 top-3.5 w-5 h-5 text-gray-400" />
                 <input 
                     type="text" 
-                    placeholder="Rechercher par date ou lieu..." 
+                    placeholder={t.searchHistory} 
                     className="w-full pl-11 pr-4 py-3 rounded-xl bg-white dark:bg-slate-800 border-none shadow-sm focus:ring-2 focus:ring-purple-500 text-gray-700 dark:text-white placeholder-gray-400"
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
@@ -596,7 +597,7 @@ const HistoryView = ({ onBack, t }: any) => {
                                     ride.status === 'completed' ? 'bg-green-100 text-green-600' : 
                                     ride.status === 'absent' ? 'bg-red-100 text-red-600' : 'bg-gray-100 text-gray-600'
                                 }`}>
-                                    {ride.status === 'completed' ? 'Terminé' : 'Absent'}
+                                    {ride.status === 'completed' ? t.completed : t.absent}
                                 </span>
                             </div>
                             <div className="flex items-center gap-4 relative">
@@ -604,22 +605,22 @@ const HistoryView = ({ onBack, t }: any) => {
                                 <div className="space-y-4 w-full">
                                     <div className="flex items-center gap-3">
                                         <div className="w-3 h-3 bg-purple-600 rounded-full z-10"></div>
-                                        <span className="text-sm text-gray-600 dark:text-gray-300">{ride.pickup}</span>
+                                        <span className="text-sm text-gray-600 dark:text-gray-300">{ride.pickup === 'Maison' ? t.home : ride.pickup}</span>
                                     </div>
                                     <div className="flex items-center gap-3">
                                         <div className="w-3 h-3 border-2 border-purple-600 bg-white dark:bg-slate-800 rounded-full z-10"></div>
-                                        <span className="text-sm text-gray-600 dark:text-gray-300">{ride.dropoff}</span>
+                                        <span className="text-sm text-gray-600 dark:text-gray-300">{ride.dropoff === 'École El Ghazala' ? t.school : ride.dropoff}</span>
                                     </div>
                                 </div>
                                 <div className="text-right">
-                                    <span className="text-xs text-gray-400 block">Durée</span>
+                                    <span className="text-xs text-gray-400 block">{t.duration}</span>
                                     <span className="text-sm font-mono text-gray-700 dark:text-gray-200">{ride.duration}</span>
                                 </div>
                             </div>
                         </div>
                     ))
                 ) : (
-                    <div className="text-center py-10 text-gray-500">Aucun trajet trouvé.</div>
+                    <div className="text-center py-10 text-gray-500">{t.noHistory}</div>
                 )}
             </div>
         </div>
@@ -645,7 +646,7 @@ const NotificationView = ({ notifications, t }: any) => {
             <Icons.Search className="absolute left-3 top-3 w-4 h-4 text-gray-400" />
             <input 
                 type="text" 
-                placeholder="Rechercher une notification..." 
+                placeholder={t.searchNotif} 
                 className="w-full pl-10 pr-4 py-2.5 rounded-lg bg-gray-100 dark:bg-slate-700 border-none focus:ring-2 focus:ring-purple-500 text-sm text-gray-800 dark:text-white placeholder-gray-500"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
@@ -677,7 +678,7 @@ const NotificationView = ({ notifications, t }: any) => {
             </div>
             ))
         ) : (
-            <div className="text-center py-10 text-gray-500">Aucune notification trouvée.</div>
+            <div className="text-center py-10 text-gray-500">{t.noNotif}</div>
         )}
       </div>
     </div>
@@ -838,7 +839,7 @@ export default function App() {
       case AppView.SIGNUP:
         return <SignupScreen onSignup={handleLogin} onLoginClick={() => setCurrentView(AppView.LOGIN)} t={t} />;
       case AppView.HOME:
-        return <HomeView user={user} t={t} mapMode={mapMode} setMapMode={setMapMode} isDarkMode={isDarkMode} />;
+        return <HomeView user={user} t={t} mapMode={mapMode} setMapMode={setMapMode} isDarkMode={isDarkMode} lang={lang} />;
       case AppView.NOTIFICATIONS:
         return <NotificationView notifications={notifications} t={t} />;
       case AppView.PROFILE:
